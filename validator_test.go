@@ -94,6 +94,15 @@ func TestValidate(t *testing.T) {
 		assert.Equal(ErrorType("TOO_SHORT"), err.Errors[0].ErrorType)
 		assert.Equal(ErrorType("MISSING_NUMBER"), err.Errors[1].ErrorType)
 	})
+
+	t.Run("Validation error can be converted to error", func(t *testing.T) {
+		input := &CreateUserInput{}
+		db := &FakeDatabase{}
+
+		err := Validate(input, db)
+
+		assert.Equal("2 validation error(s) for golidator.CreateUserInput\nPassword: TOO_SHORT\nPassword: MISSING_NUMBER", err.Error())
+	})
 }
 
 type Herd struct {
@@ -101,7 +110,7 @@ type Herd struct {
 	Alpha   *Animal
 }
 
-func (obj *Herd) getValidators(ctx ...interface{}) ValidatorCollection {
+func (obj *Herd) GetValidators(ctx ...interface{}) ValidatorCollection {
 	validarots := GetValidatorsForList("Animals", obj.Animals)
 	validarots = append(validarots, GetValidatorsForObject("leader", obj.Alpha)...)
 	return validarots
@@ -113,7 +122,7 @@ type Animal struct {
 	KindAlias string
 }
 
-func (obj *Animal) getValidators(ctx ...interface{}) ValidatorCollection {
+func (obj *Animal) GetValidators(ctx ...interface{}) ValidatorCollection {
 	return ValidatorCollection{
 		{"Kind", func() *ValueError {
 			if obj.Kind == "" {
@@ -135,7 +144,7 @@ type CreateUserInput struct {
 	Password string
 }
 
-func (obj *CreateUserInput) getValidators(ctx ...interface{}) ValidatorCollection {
+func (obj *CreateUserInput) GetValidators(ctx ...interface{}) ValidatorCollection {
 	db, ok := ctx[0].(IDatabase)
 	if !ok {
 		panic("oops")
