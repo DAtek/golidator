@@ -11,4 +11,4 @@ Lightweight, extensible validation library inspired by [Pydantic](https://github
 
 
 ## Usage
-See `validator_test.go`
+See [`validator_test.go`](https://github.com/DAtek/golidator/blob/main/validator_test.go)
