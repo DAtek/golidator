@@ -38,10 +38,10 @@ func Validate(obj IValidators, ctx ...interface{}) *ValidationError {
 	return nil
 }
 
-func GetValidatorsForList[T IValidators](fieldName string, list []T) ValidatorCollection {
+func GetValidatorsForList[T IValidators](fieldName string, list []T, ctx ...interface{}) ValidatorCollection {
 	validators := ValidatorCollection{}
 	for i, children := range list {
-		for _, validator := range children.GetValidators() {
+		for _, validator := range children.GetValidators(ctx...) {
 			childFieldName := strings.Join([]string{fieldName, fmt.Sprint(i), validator.Field}, ".")
 			newValidator := &Validator{Field: childFieldName, Function: validator.Function}
 			validators = append(validators, newValidator)
@@ -50,13 +50,13 @@ func GetValidatorsForList[T IValidators](fieldName string, list []T) ValidatorCo
 	return validators
 }
 
-func GetValidatorsForObject[T IValidators](fieldName string, child T) ValidatorCollection {
+func GetValidatorsForObject[T IValidators](fieldName string, child T, ctx ...interface{}) ValidatorCollection {
 	if reflect.ValueOf(child).IsNil() {
 		return nil
 	}
 
 	validators := ValidatorCollection{}
-	for _, validator := range child.GetValidators() {
+	for _, validator := range child.GetValidators(ctx...) {
 		childFieldName := strings.Join([]string{fieldName, validator.Field}, ".")
 		newValidator := &Validator{Field: childFieldName, Function: validator.Function}
 		validators = append(validators, newValidator)
