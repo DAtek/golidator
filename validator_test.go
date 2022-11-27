@@ -71,14 +71,14 @@ func TestValidate(t *testing.T) {
 		assert.Nil(err)
 	})
 
-	t.Run("Validate with context", func(t *testing.T) {
-		input := &CreateUserInput{Username: "John", Password: "abcde4"}
+	t.Run("Validate child object with context", func(t *testing.T) {
+		input := &Login{User: &CreateUserInput{Username: "John", Password: "abcde4"}}
 		db := &FakeDatabase{}
 
 		err := Validate(input, db)
 
 		assert.Equal(1, len(err.Errors))
-		assert.Equal("Username", err.Errors[0].Location)
+		assert.Equal("User.Username", err.Errors[0].Location)
 		assert.Equal(ErrorType("ALREADY_EXISTS"), err.Errors[0].ErrorType)
 	})
 
@@ -137,6 +137,14 @@ func (obj *Animal) GetValidators(ctx ...interface{}) ValidatorCollection {
 			return nil
 		}},
 	}
+}
+
+type Login struct {
+	User *CreateUserInput
+}
+
+func (obj *Login) GetValidators(ctx ...interface{}) ValidatorCollection {
+	return GetValidatorsForObject("User", obj.User, ctx...)
 }
 
 type CreateUserInput struct {
