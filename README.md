@@ -1,4 +1,4 @@
-[![codecov](https://codecov.io/gh/DAtek/golidator/branch/main/graph/badge.svg?token=1QYUBN9NDN)](https://codecov.io/gh/DAtek/golidator)
+[![codecov](https://codecov.io/gh/DAtek/golidator/graph/badge.svg?token=1QYUBN9NDN)](https://codecov.io/gh/DAtek/golidator)
 
 # Golidator
 Lightweight, extensible validation library inspired by [Pydantic](https://github.com/pydantic/pydantic)
